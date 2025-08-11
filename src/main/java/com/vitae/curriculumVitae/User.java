@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity // Esta anotación indica que esta clase es una entidad JPA, lo que significa que se mapeará a una tabla en la base de datos.
 public class User {
@@ -13,7 +15,11 @@ public class User {
     private Integer id;
 
     private String nombre;
+
+    @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @NotEmpty(message = "Email cannot be empty")
     private String correo; 
+
     private String telefono;
     private String profesion;
     private String tiempoExp;
