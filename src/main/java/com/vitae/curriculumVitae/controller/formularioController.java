@@ -1,4 +1,4 @@
-package com.vitae.curriculumVitae;
+package com.vitae.curriculumVitae.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.vitae.curriculumVitae.model.User;
+import com.vitae.curriculumVitae.repository.UsuarioRepository;
 
 import java.util.List;
 import java.util.Optional;
