@@ -1,4 +1,4 @@
-package com.vitae.curriculumVitae;
+package com.vitae.curriculumVitae.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.vitae.curriculumVitae.model.User;
+import com.vitae.curriculumVitae.repository.UsuarioRepository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,17 @@ public class formularioController {
     private UsuarioRepository usuarioRepository;
     
     //Endpopint
+
+    @GetMapping("/landingPage")
+    public String mostrarLandingPage() {
+        return "landingPage"; // busca landingPage.html en /templates
+    }
+
+    @GetMapping("/plantillaCreativa")
+    public String mostrarPlantillaCreativa() {
+        return "plantillaCreativa"; // busca plantillaCreativa.html en /templates
+    }
+
 
     @GetMapping("/formulario")
     public String mostrarFormulario(Model model) {
