@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Curriculum</title>
+    <link rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arsenal:ital,wght@0,400;0,700;1,400;1,700&family=Cinzel+Decorative&family=DM+Serif+Display&family=Dosis:wght@200..800&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Libertinus+Sans:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Display&family=Lora:ital,wght@0,400..700;1,400..700&family=Parkinsans:wght@300..800&family=Ribeye&display=swap" rel="stylesheet">
+  
+</head>
+<style>
+    body{
+        padding: 20px;
+    }
+    .page {
+        width: 794px;        /* Ancho A4 */
+        min-height: 1072px;  /* Alto A4 */
+        margin: auto;
+        background: white;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        position: relative;
+
+    }
+    h2 {
+        font-family: "Parkinsans", sans-serif;
+        font-weight: 600;
+        font-size: 1em;
+        letter-spacing: 1px;
+    }
+    .material-icons {
+        vertical-align: middle;
+        margin-right: 8px;
+        font-size: 22px;
+    }
+    span {
+        display: block;
+        margin: 5px 0;
+        font-size: 0.9rem;
+        font-family: "Parkinsans", sans-serif;      
+    }
+    .content-info img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+    h1 {
+        font-family: "Parkinsans", sans-serif;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-align: justify;
+        font-size: 3.5em;
+    }
+    p{
+        letter-spacing: 1px;
+        font-size: .9em;
+        font-weight: 300;
+    }
+    h3 {
+        font-family: "Parkinsans", sans-serif;
+        font-weight: 600;
+        font-size: 1em;
+        letter-spacing: 1px;
+        margin-bottom: 0;
+    }
+    h4 {
+        font-family: "Parkinsans", sans-serif;
+        font-weight: 100;
+        font-size: .9em;
+        color: #7f7f7f;
+        letter-spacing: 2px;
+    }
+    h5 {
+        font-family: "Parkinsans", sans-serif;
+        font-weight: 500;
+        font-size: 0.8em;
+        letter-spacing: 1px;
+        margin-top: 0;
+        margin-bottom: 8px;
+    }
+    .button_accion {
+        float: right;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 46px;
+        right: -58px;
+        z-index: -1;
+    }
+    .button_accion .btn{
+        margin-bottom: 9px;
+        width: 3.6em;
+        padding-left: 0;
+        padding-right: 5px;
+        border-radius: 0px 20px 20px 0px;
+    }
+</style>
+<body>
+    <div class="page d-grid ">
+        <div class="row m-auto z-2">
+            <div style=" padding: 3rem 15px 3rem 2.5rem; background-color: rgb(16 84 116) !important;
+        color: white;" class="col-5 content-info d-flex flex-column  bg-light  ">
+                <img class="" th:src="@{${foto}}" alt="Foto de Perfil" style="margin: 0 0 2rem 0; width:250px;height:250px;border-radius:50%;border: 9px solid #387691;">
+                <span class="" th:text="${numeroTel}">
+                    <span class="material-icons">phone  </span>
+                    +57 (319)316-5506
+                </span>
+                <span th:text="${linkedin}">
+                    <span class="material-icons">link  </span>
+                    www.linkedin/saradan.com
+                </span>
+                <span th:text="${email}">
+                    <span class="material-icons">email  </span>
+                    saradan.m@gmail.com
+                </span>
+                <span th:text="${pais}"> 
+                    <span class="material-icons">room  </span> 
+                    Colombia
+                </span>
+                <!-- Referencia -->
+                 <div class="mb-3 mt-4">
+                    <h2 class="2">REFERENCIA</h2>
+                    <div class="d-flex gap-1 align-items-center">
+                        <span class="material-icons">person</span>
+                        <div class="d-flex flex-column">
+                            <span style="margin: 1px;" th:text="${nombreRef}">Nombre de la referencia</span>
+                            <span  style="margin: 1px;" th:text="${telefonoRef}">(319) 316-5506</span>
+                        </div>
+                    </div>
+                 </div>
+                <!-- Perfil profesional -->
+                 <div class="mb-3 mt-4">
+                    <div class="row">
+                        <h2>SOBRE MI</h2>
+                        <p th:text="${sobreMi}">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores blanditiis quidem aliquid consequatur similique eius sint, dignissimos molestias commodi, eum est? Consequuntur beatae neque quos harum ullam molestiae repudiandae commodi?</p>
+                    </div>
+                    <div style="width: 84%;" class=" d-flex justify-content-between mt-4" >
+                        <div class="mb-3">
+                            <h2>HABILIDADES</h2>
+                            <ul class="p-0" style="list-style-type: none;">
+                                <li th:each="habilidad : ${#strings.arraySplit(habilidades, ',')}" th:text="${habilidad.trim()}">
+                                    Habilidad 1
+                                </li>
+                                <li th:each="habilidad : ${#strings.arraySplit(habilidades, ',')}" th:text="${habilidad.trim()}">
+                                    Habilidad 2
+                                </li>
+                                <li th:each="habilidad : ${#strings.arraySplit(habilidades, ',')}" th:text="${habilidad.trim()}">
+                                    Habilidad 3
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mb-3">
+                            <h2>IDIOMA</h2>
+                            <p th:text="${idioma}">Ingles</p>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            <div class="col-7 " style="padding: 5em 3em;">
+                <h1 th:text="${nombre}">MARCELA CARDENAS</h1>
+                <h4  style="margin-bottom: 3em;" th:text="${profesion}">Ingeniero de Software</h4>
+                <div>
+                    <h2 style="margin-bottom: 2em;" >EXPERIENCIAS</h2>
+                    <div th:each="exp : ${experiencias}" class="mb-4 d-grid">
+                        <div class="row">
+                            <div class="col-2">
+                                <span style="margin: 0; font-size: 0.9em; font-weight: 600;" th:text="${fechaInicio}">2023</span>
+                            </div>
+                            <div class="col-10 mb-4">
+                                <h3 th:text="${exp.puesto}">Gerente internacional agricola</h3>
+                                <h5 th:text="${exp.empresa}">AGRICULTURE</h5>
+                                <p th:text="${exp.descripcion}"> Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto.</p>
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col-2">
+                                <span style="margin: 0; font-size: 0.9em; font-weight: 600;" th:text="${fechaInicio}">2023</span>
+                            </div>
+                            <div class="col-10">
+                                <h3 th:text="${exp.puesto}">Gerente internacional agricola</h3>
+                                <h5 th:text="${exp.empresa}">AGRICULTURE</h5>
+                                <p th:text="${exp.descripcion}"> Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="button_accion">
+                    <div style="display: flex;flex-direction: column;">
+                        <a th:href="@{api/editar/{id}(id=api.id)}" class="btn btn-warning">Editar</a>
+                        <a class="btn btn-info">PDF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -28,6 +28,17 @@ public class formularioController {
     
     //Endpopint
 
+    @GetMapping("/landingPage")
+    public String mostrarLandingPage() {
+        return "landingPage"; // busca landingPage.html en /templates
+    }
+
+    @GetMapping("/plantillaCreativa")
+    public String mostrarPlantillaCreativa() {
+        return "plantillaCreativa"; // busca plantillaCreativa.html en /templates
+    }
+
+
     @GetMapping("/formulario")
     public String mostrarFormulario(Model model) {
         model.addAttribute("user", new User());
