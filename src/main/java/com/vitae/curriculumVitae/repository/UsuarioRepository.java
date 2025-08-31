@@ -1,9 +1,11 @@
-package com.vitae.curriculumVitae;
+package com.vitae.curriculumVitae.repository;
 
 import java.util.Optional;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.vitae.curriculumVitae.model.User;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<User, Integer> { //el user es la entidad y Integer es el tipo de dato de la clave primaria.
