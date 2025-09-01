@@ -8,14 +8,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
-
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.vitae.curriculumVitae.model.User;
-import com.vitae.curriculumVitae.repository.UsuarioRepository;
+import com.vitae.curriculumVitae.model.Curriculum;
+import com.vitae.curriculumVitae.model.Experiencia;
+import com.vitae.curriculumVitae.model.Perfil;
+import com.vitae.curriculumVitae.repository.CurriculumRepository;
+import com.vitae.curriculumVitae.repository.PerfilRepository;
+import com.vitae.curriculumVitae.repository.ExperienciaRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +29,22 @@ import java.util.Optional;
 public class formularioController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private CurriculumRepository curriculumRepository;
+    @Autowired
+    private PerfilRepository perfilRepository;
+    @Autowired
+    private ExperienciaRepository experienciaRepository;
+    @Autowired
+    private static final String[] PAISES = {
+        "Colombia", "México", "España", "Argentina", "Chile", "Perú", 
+        "Venezuela", "Ecuador", "Bolivia", "Uruguay", "Paraguay",
+        "Estados Unidos", "Canadá", "Brasil", "Francia", "Alemania",
+        "Reino Unido", "Italia", "Países Bajos", "Suecia"
+    };
+    @Autowired
+    private static final String[] IDIOMAS = {
+        "Español","Inglés","Portugués","Francés","Alemán","Italiano","Mandarín","Árabe"
+    };
     
     //Endpopint
 
@@ -41,85 +61,103 @@ public class formularioController {
 
     @GetMapping("/formulario")
     public String mostrarFormulario(Model model) {
-        model.addAttribute("user", new User());
-        return "formulario"; // busca formulario.html en /templates
-    }
-
-    @GetMapping("/lista")
-        public String mostrarLista( Model model) {
-            // Obtiene todos los usuarios de la base de datos y los agrega al modelo
-            // para que estén disponibles en la vista lista.html
-        List<User> users = usuarioRepository.findAll();
-            model.addAttribute("users", users);
-            return "lista"; 
+        Curriculum curriculum = new Curriculum();
+    
+    // INICIALIZAR PERFIL
+    Perfil perfil = new Perfil();
+    curriculum.setPerfil(perfil);
+    
+    // INICIALIZAR LISTA DE EXPERIENCIAS
+    List<Experiencia> experiencias = new ArrayList<>();
+    // Agregar experiencias vacías (máximo 3)
+    experiencias.add(new Experiencia());
+    experiencias.add(new Experiencia());
+    experiencias.add(new Experiencia());
+    curriculum.setExperiencias(experiencias);
+    
+    model.addAttribute("curriculum", curriculum);
+    model.addAttribute("paises", PAISES);
+    model.addAttribute("idiomas", IDIOMAS);
+    return "formulario";
     }
     
     @PostMapping("/create-cv")
-    public String creatCV( @ModelAttribute User user){
-        usuarioRepository.save(user);
-        return "redirect:/api/lista"; //redirecciona a la lista de CVs
+public String creatCV(@ModelAttribute Curriculum curriculum, BindingResult bindingResult, Model model) {
+    if (bindingResult.hasErrors()) {
+        // Reponer listas para el formulario
+        model.addAttribute("paises", PAISES);
+        model.addAttribute("idiomas", IDIOMAS);
+        // opcional: imprime errores en consola para depurar
+        bindingResult.getAllErrors().forEach(e -> System.out.println("Binding error: " + e));
+        return "formulario"; // vuelve al formulario mostrando errores
     }
+
+    // Si no hay errores, guarda
+    curriculumRepository.save(curriculum);
+    return "redirect:/api/plantillaCreativa";
+}
+
 
 
 //     @PostMapping("/create-cv")
-//     public ResponseEntity<?> crearCV(@RequestBody User user){
+//     public ResponseEntity<?> crearCV(@RequestBody Curriculum Curriculum){
 //         try {
 //             //Validación de entrada de campos. valida si estan vacios.
-//             if (user.getNombre() == null || user.getNombre().trim().isEmpty()) {
+//             if (Curriculum.getNombre() == null || Curriculum.getNombre().trim().isEmpty()) {
 //             return ResponseEntity.badRequest().body("El nombre es un campo obligatorio");
 //             }
 
-//             if (user.getCorreo() == null || user.getCorreo().trim().isEmpty()) {
+//             if (Curriculum.getCorreo() == null || Curriculum.getCorreo().trim().isEmpty()) {
 //                 return ResponseEntity.badRequest().body("El correo es un campo obligatorio");
                 
 //             }
 
 //             //Validar el formato básico de un correo electrónico
-//             if (!user.getCorreo().contains("@") && !user.getCorreo().contains(".")) {
+//             if (!Curriculum.getCorreo().contains("@") && !Curriculum.getCorreo().contains(".")) {
 //                 return ResponseEntity.badRequest().body("El formato del correo no es válido");
 //             }
 
 //             //Verifica si el correo ya fue registrado en el sistema.
-//             Optional<User> existingUser = usuarioRepository.findByCorreo(user.getCorreo());
-//             if(existingUser.isPresent()){
+//             Optional<Curriculum> existingCurriculum = CurriculumRepository.findByCorreo(Curriculum.getCorreo());
+//             if(existingCurriculum.isPresent()){
 //                 return ResponseEntity.badRequest().body("Ya existe un CV con este correo");
 //             }
 
-//             if (user.getTelefono() == null || user.getTelefono().trim().isEmpty()) {
+//             if (Curriculum.getTelefono() == null || Curriculum.getTelefono().trim().isEmpty()) {
 //                 return ResponseEntity.badRequest().body("El teléfono es obligatorio");
 //             }
             
-//             if (user.getProfesion() == null || user.getProfesion().trim().isEmpty()) {
+//             if (Curriculum.getProfesion() == null || Curriculum.getProfesion().trim().isEmpty()) {
 //                 return ResponseEntity.badRequest().body("La profesión es obligatoria");
 //             }
             
-//             if (user.getTiempoExp() == null || user.getTiempoExp().trim().isEmpty()) {
+//             if (Curriculum.getTiempoExp() == null || Curriculum.getTiempoExp().trim().isEmpty()) {
 //                 return ResponseEntity.badRequest().body("El tiempo de experiencia es obligatorio");
 //             }
             
-//             if (user.getHabilidades() == null || user.getHabilidades().trim().isEmpty()) {
+//             if (Curriculum.getHabilidades() == null || Curriculum.getHabilidades().trim().isEmpty()) {
 //                 return ResponseEntity.badRequest().body("Las habilidades son obligatorias");
 //             }
             
-//             if (user.getDescripcion() == null || user.getDescripcion().trim().isEmpty()) {
+//             if (Curriculum.getDescripcion() == null || Curriculum.getDescripcion().trim().isEmpty()) {
 //                 return ResponseEntity.badRequest().body("La descripción es obligatoria");
 //             }
 
 //             //Se valida si que el nombre tenga por lo menos 2 carácteres
-//             if (user.getNombre().trim().length() < 2) {
+//             if (Curriculum.getNombre().trim().length() < 2) {
 //                 return ResponseEntity.badRequest().body("El nombre debe tener al menos 2 caracteres");
 //             }
 
 //             //Verificar la longitud del telefono del usuario
-//             String telefonoLimpio = user.getTelefono().replaceAll("^[0-9]", "");
+//             String telefonoLimpio = Curriculum.getTelefono().replaceAll("^[0-9]", "");
 //             if (telefonoLimpio.trim().length() == 10) {
 //                 return ResponseEntity.badRequest().body("El Telefono debe tener 10 dígitos");
 //             }
 
 //             //Guardar el CV del usuario
-//             User saveUser = usuarioRepository.save(user);
+//             Curriculum saveCurriculum = CurriculumRepository.save(Curriculum);
 
-//             return ResponseEntity.status(HttpStatus.CREATED).body(saveUser).ok(saveUser);
+//             return ResponseEntity.status(HttpStatus.CREATED).body(saveCurriculum).ok(saveCurriculum);
         
 //     } catch (Exception e) {
 //         System.err.println("❌ Error al guardar CV: " + e.getMessage());
@@ -130,10 +168,10 @@ public class formularioController {
 //   //Aquí se obtienen todos los CVs que hay registrados
 //   @GetMapping("/cv")
 //   //Se especifica que se esta llamando a una lista de usuarios
-//   public ResponseEntity<List<User>> obtenerTodosLosCVs(){
+//   public ResponseEntity<List<Curriculum>> obtenerTodosLosCVs(){
 //     try {
-//       List<User> users = usuarioRepository.findAll();
-//             return ResponseEntity.ok(users);
+//       List<Curriculum> Curriculums = CurriculumRepository.findAll();
+//             return ResponseEntity.ok(Curriculums);
 //     } catch (Exception e) {
 //       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 //     }
