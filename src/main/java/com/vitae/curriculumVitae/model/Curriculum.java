@@ -1,6 +1,8 @@
 package com.vitae.curriculumVitae.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,14 +33,12 @@ public class Curriculum {
     private String linkedin;
     
     // Relación OneToOne con Perfil
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_perfil")
     private Perfil perfil;
-    
-    // Relación OneToMany con Experiencia (máximo 4)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_experiencia")
-    private List<Experiencia> experiencias;
+
+    @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Experiencia> experiencias = new ArrayList<>();
     
     // Constructores
     public Curriculum() {}

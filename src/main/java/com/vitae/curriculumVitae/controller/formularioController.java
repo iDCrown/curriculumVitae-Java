@@ -34,14 +34,14 @@ public class formularioController {
     private PerfilRepository perfilRepository;
     @Autowired
     private ExperienciaRepository experienciaRepository;
-    @Autowired
+    
     private static final String[] PAISES = {
         "Colombia", "México", "España", "Argentina", "Chile", "Perú", 
         "Venezuela", "Ecuador", "Bolivia", "Uruguay", "Paraguay",
         "Estados Unidos", "Canadá", "Brasil", "Francia", "Alemania",
         "Reino Unido", "Italia", "Países Bajos", "Suecia"
     };
-    @Autowired
+    
     private static final String[] IDIOMAS = {
         "Español","Inglés","Portugués","Francés","Alemán","Italiano","Mandarín","Árabe"
     };
@@ -82,18 +82,30 @@ public class formularioController {
     }
     
     @PostMapping("/create-cv")
-public String creatCV(@ModelAttribute Curriculum curriculum, BindingResult bindingResult, Model model) {
-    if (bindingResult.hasErrors()) {
-        // Reponer listas para el formulario
+    public String creatCV(@ModelAttribute Curriculum curriculum, BindingResult bindingResult, Model model){
+        if (bindingResult.hasErrors()) {
         model.addAttribute("paises", PAISES);
         model.addAttribute("idiomas", IDIOMAS);
-        // opcional: imprime errores en consola para depurar
         bindingResult.getAllErrors().forEach(e -> System.out.println("Binding error: " + e));
-        return "formulario"; // vuelve al formulario mostrando errores
+        return "formulario";
     }
 
-    // Si no hay errores, guarda
-    curriculumRepository.save(curriculum);
+    try {
+        // asignar parent en experiencias si es necesario
+        if (curriculum.getExperiencias() != null) {
+            for (Experiencia e : curriculum.getExperiencias()) {
+                if (e != null) e.setCurriculum(curriculum);
+            }
+        }
+        curriculumRepository.save(curriculum);
+    } catch (Exception ex) {
+        ex.printStackTrace(); // <<-- mira el stacktrace en consola: 'Caused by:' es la clave
+        model.addAttribute("errorMessage", "Error al guardar CV: " + ex.getMessage());
+        model.addAttribute("paises", PAISES);
+        model.addAttribute("idiomas", IDIOMAS);
+        return "formulario";
+    }
+
     return "redirect:/api/plantillaCreativa";
 }
 

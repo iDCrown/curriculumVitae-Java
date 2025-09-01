@@ -18,8 +18,8 @@ public class Perfil {
     @Column(columnDefinition = "TEXT")
     private String habilidades;
     
-    @Enumerated(EnumType.STRING)
-    private Idioma idioma;
+    @Column(columnDefinition = "TEXT")
+    private String idioma;
     
     @Column(name = "nombre_ref")
     private String nombreRef;
@@ -27,15 +27,10 @@ public class Perfil {
     @Column(name = "numero_ref")
     private String numeroRef;
     
-    // Enum para idiomas establecidos
-    public enum Idioma {
-        ESPAÑOL, INGLES, FRANCES, PORTUGUES, ITALIANO, ALEMAN, MANDARIN, OTRO
-    }
-    
     // Constructores
     public Perfil() {}
     
-    public Perfil(String sobreMi, String habilidades, Idioma idioma, 
+    public Perfil(String sobreMi, String habilidades, String idioma, 
                   String nombreRef, String numeroRef) {
         this.sobreMi = sobreMi;
         this.habilidades = habilidades;
@@ -54,8 +49,8 @@ public class Perfil {
     public String getHabilidades() { return habilidades; }
     public void setHabilidades(String habilidades) { this.habilidades = habilidades; }
     
-    public Idioma getIdioma() { return idioma; }
-    public void setIdioma(Idioma idioma) { this.idioma = idioma; }
+    public String getIdioma() { return idioma; }
+    public void setIdioma(String idioma) { this.idioma = idioma; }
     
     public String getNombreRef() { return nombreRef; }
     public void setNombreRef(String nombreRef) { this.nombreRef = nombreRef; }
