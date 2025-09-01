@@ -20,13 +20,28 @@
     }
     .page {
         width: 794px;        /* Ancho A4 */
-        min-height: 1072px;  /* Alto A4 */
+        min-height: auto;  /* Alto A4 */
         margin: auto;
         background: white;
         box-shadow: 0 0 10px rgba(0,0,0,0.2);
         position: relative;
 
     }
+    label {
+        display: block;     /* Para que cada label ocupe toda la línea */
+        margin-bottom: 5px;
+        font-weight: bold;
+        word-wrap: break-word; /* Si el texto es muy largo, se parte */
+    }
+    * {
+    box-sizing: border-box;
+    }
+    p, span, a {
+        display: block; /* hace que respeten padding y ancho */
+        word-wrap: break-word; /* rompe palabras largas */
+        overflow-wrap: break-word; /* soporte más moderno */
+        white-space: normal; 
+        }
     h2 {
         font-family: "Parkinsans", sans-serif;
         font-weight: 600;
@@ -100,37 +115,47 @@
         padding-right: 5px;
         border-radius: 0px 20px 20px 0px;
     }
+    .span_datos {
+        margin-left: 5px;
+        text-wrap: auto;
+    }
+    .material-icons{
+        display: flex;
+
+    }
+    a{
+        color: white;
+        text-decoration: none;
+    }
 </style>
 <body>
     <div class="page d-grid ">
         <div class="row m-auto z-2">
             <div style=" padding: 3rem 15px 3rem 2.5rem; background-color: rgb(16 84 116) !important;
         color: white;" class="col-5 content-info d-flex flex-column  bg-light  ">
-                <img class="" th:src="@{${foto}}" alt="Foto de Perfil" style="margin: 0 0 2rem 0; width:250px;height:250px;border-radius:50%;border: 9px solid #387691;">
-                <span class="" th:text="${numeroTel}">
-                    <span class="material-icons">phone  </span>
-                    +57 (319)316-5506
+                <img class=""  alt="Foto de Perfil" style="margin: 0 0 2rem 0; width:250px;height:250px;border-radius:50%;border: 9px solid #387691;">
+                <span class="material-icons">phone 
+                    <span class="span_datos" th:text="${curriculum.numeroTel}"></span>
                 </span>
-                <span th:text="${linkedin}">
-                    <span class="material-icons">link  </span>
-                    www.linkedin/saradan.com
+                <span class="material-icons">link 
+                   <a class="span_datos" th:href="${curriculum.linkedin}">
+                    <span th:text="${curriculum.linkedin}"></span>
+                   </a>
                 </span>
-                <span th:text="${email}">
-                    <span class="material-icons">email  </span>
-                    saradan.m@gmail.com
+                <span  class="material-icons">email  
+                    <span class="span_datos" th:text="${curriculum.email}"></span>
                 </span>
-                <span th:text="${pais}"> 
-                    <span class="material-icons">room  </span> 
-                    Colombia
-                </span>
+                <span class="material-icons">room       
+                    <span class="span_datos" th:text="${curriculum.pais}"></span>
+                </span> 
                 <!-- Referencia -->
                  <div class="mb-3 mt-4">
                     <h2 class="2">REFERENCIA</h2>
                     <div class="d-flex gap-1 align-items-center">
                         <span class="material-icons">person</span>
                         <div class="d-flex flex-column">
-                            <span style="margin: 1px;" th:text="${nombreRef}">Nombre de la referencia</span>
-                            <span  style="margin: 1px;" th:text="${telefonoRef}">(319) 316-5506</span>
+                            <span style="margin: 1px;" th:text="${perfil.nombreRef}">Nombre de la referencia</span>
+                            <span  style="margin: 1px;" th:text="${perfil.numeroRef}">(319) 316-5506</span>
                         </div>
                     </div>
                  </div>
@@ -138,53 +163,37 @@
                  <div class="mb-3 mt-4">
                     <div class="row">
                         <h2>SOBRE MI</h2>
-                        <p th:text="${sobreMi}">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores blanditiis quidem aliquid consequatur similique eius sint, dignissimos molestias commodi, eum est? Consequuntur beatae neque quos harum ullam molestiae repudiandae commodi?</p>
+                        <p th:text="${perfil.sobreMi}">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores blanditiis quidem aliquid consequatur similique eius sint, dignissimos molestias commodi, eum est? Consequuntur beatae neque quos harum ullam molestiae repudiandae commodi?</p>
                     </div>
                     <div style="width: 84%;" class=" d-flex justify-content-between mt-4" >
                         <div class="mb-3">
                             <h2>HABILIDADES</h2>
                             <ul class="p-0" style="list-style-type: none;">
-                                <li th:each="habilidad : ${#strings.arraySplit(habilidades, ',')}" th:text="${habilidad.trim()}">
+                                <li th:each="habilidad : ${#strings.arraySplit(perfil.habilidades != null ? perfil.habilidades :'', ',')}" th:text="${habilidad.trim()}">
                                     Habilidad 1
-                                </li>
-                                <li th:each="habilidad : ${#strings.arraySplit(habilidades, ',')}" th:text="${habilidad.trim()}">
-                                    Habilidad 2
-                                </li>
-                                <li th:each="habilidad : ${#strings.arraySplit(habilidades, ',')}" th:text="${habilidad.trim()}">
-                                    Habilidad 3
                                 </li>
                             </ul>
                         </div>
                         <div class="mb-3">
                             <h2>IDIOMA</h2>
-                            <p th:text="${idioma}">Ingles</p>
+                            <p th:text="${perfil.idioma}">Ingles</p>
                         </div>
                     </div>
                  </div>
             </div>
             <div class="col-7 " style="padding: 5em 3em;">
-                <h1 th:text="${nombre}">MARCELA CARDENAS</h1>
-                <h4  style="margin-bottom: 3em;" th:text="${profesion}">Ingeniero de Software</h4>
+                <h1 th:text="${#strings.arraySplit(curriculum.nombre, ' ')[0]} + ' ' + ${#strings.arraySplit(curriculum.apellido, ' ')[0]}">MARCELA CARDENAS</h1>
+                <h4  style="margin-bottom: 3em;" th:text="${curriculum.titulo}">Ingeniero de Software</h4>
                 <div>
                     <h2 style="margin-bottom: 2em;" >EXPERIENCIAS</h2>
                     <div th:each="exp : ${experiencias}" class="mb-4 d-grid">
                         <div class="row">
                             <div class="col-2">
-                                <span style="margin: 0; font-size: 0.9em; font-weight: 600;" th:text="${fechaInicio}">2023</span>
+                                <span style="margin: 0; font-size: 0.9em; font-weight: 600;" th:text="${exp.fechaInicio.year}">2023</span>
                             </div>
                             <div class="col-10 mb-4">
-                                <h3 th:text="${exp.puesto}">Gerente internacional agricola</h3>
-                                <h5 th:text="${exp.empresa}">AGRICULTURE</h5>
-                                <p th:text="${exp.descripcion}"> Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto.</p>
-                            </div>
-                        </div>
-                         <div class="row">
-                            <div class="col-2">
-                                <span style="margin: 0; font-size: 0.9em; font-weight: 600;" th:text="${fechaInicio}">2023</span>
-                            </div>
-                            <div class="col-10">
-                                <h3 th:text="${exp.puesto}">Gerente internacional agricola</h3>
-                                <h5 th:text="${exp.empresa}">AGRICULTURE</h5>
+                                <h3 th:text="${exp.nombreCargo}">Gerente internacional agricola</h3>
+                                <h5 th:text="${exp.nombreEmpresa}">AGRICULTURE</h5>
                                 <p th:text="${exp.descripcion}"> Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto Descripción de la experiencia laboral, responsabilidades y logros obtenidos en el puesto.</p>
                             </div>
                         </div>
@@ -192,7 +201,7 @@
                 </div>
                  <div class="button_accion">
                     <div style="display: flex;flex-direction: column;">
-                        <a th:href="@{api/editar/{id}(id=api.id)}" class="btn btn-warning">Editar</a>
+                        <a  class="btn btn-warning">Editar</a>
                         <a class="btn btn-info">PDF</a>
                     </div>
                 </div>
