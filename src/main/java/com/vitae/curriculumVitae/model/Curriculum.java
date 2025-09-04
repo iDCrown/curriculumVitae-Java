@@ -1,9 +1,11 @@
 package com.vitae.curriculumVitae.model;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Table(name = "curriculums")
@@ -13,31 +15,49 @@ public class Curriculum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotBlank(message = "El nombre es obligatorio")
+    @Pattern(regexp="^[\\p{L}\\s]{1,20}$", message="El nombre solo puede contener letras y espacios, y tener entre 1 y 20 caracteres")
     @Column(nullable = false)
     private String nombre;
-    
+
+    @NotBlank(message = "El apellido es obligatorio")
+    @Pattern(regexp="^[\\p{L}\\s]{1,20}$", message="El apellidp solo puede contener letras y espacios, y tener entre 1 y 20 caracteres")
     @Column(nullable = false)
     private String apellido;
     
+    @NotBlank(message = "El nombre es obligatorio")
+    @Pattern(regexp="^[\\p{L}\\s]{1,50}$", message="El titulo solo puede contener letras y espacios, y tener entre 1 y 50 caracteres")
     @Column(nullable = false)
     private String titulo;
     
+    @NotBlank(message = "El nombre es obligatorio")
+    @Pattern(regexp="^\\+?[0-9\\s-]{7,15}$", message="El número de teléfono solo puede contener dígitos, espacios, guiones y opcionalmente un '+' al inicio, y tener entre 7 y 15 caracteres")
     @Column(name = "numero_tel")
     private String numeroTel;
     
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "El email debe ser válido, contener '@' y un dominio")
     @Column(nullable = false, unique = true)
     private String email;
     
+    @NotBlank(message = "El país es obligatorio")
     private String pais;
     
+    @NotBlank(message = "El LinkedIn es obligatorio")
+    @Pattern(regexp="^(https?://)?(www\\.)?linkedin\\.com/.*$", message="El LinkedIn debe ser una URL válida ")
     private String linkedin;
+
+    @Lob
+    private byte[] img_perfil;
     
     // Relación OneToOne con Perfil
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_perfil")
+    @Valid 
     private Perfil perfil;
 
     @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Valid 
     private List<Experiencia> experiencias = new ArrayList<>();
     
     // Constructores
@@ -59,13 +79,31 @@ public class Curriculum {
     public void setId(Long id) { this.id = id; }
     
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setNombre(String nombre) { 
+        if (nombre != null && !nombre.isEmpty()) {
+            this.nombre = nombre.substring(0, 1).toUpperCase() + nombre.substring(1).toLowerCase();
+        } else {
+            this.nombre = nombre;
+        }
+    }
     
     public String getApellido() { return apellido; }
-    public void setApellido(String apellido) { this.apellido = apellido; }
+    public void setApellido(String apellido) { 
+        if (apellido != null && !apellido.isEmpty()) {
+            this.apellido = apellido.substring(0, 1).toUpperCase() + apellido.substring(1).toLowerCase();
+        } else {
+            this.apellido = apellido;
+        }
+    }
     
     public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public void setTitulo(String titulo) { 
+       if (titulo != null && !titulo.isEmpty()) {
+            this.titulo = titulo.substring(0, 1).toUpperCase() + titulo.substring(1).toLowerCase();
+        } else {
+            this.titulo = titulo;
+        }
+    }
     
     public String getNumeroTel() { return numeroTel; }
     public void setNumeroTel(String numeroTel) { this.numeroTel = numeroTel; }
@@ -78,6 +116,9 @@ public class Curriculum {
     
     public String getLinkedin() { return linkedin; }
     public void setLinkedin(String linkedin) { this.linkedin = linkedin; }
+
+    public byte[] getImg_perfil() { return img_perfil; }
+    public void setImg_perfil(byte[] img_perfil) { this.img_perfil = img_perfil; }
     
     public Perfil getPerfil() { return perfil; }
     public void setPerfil(Perfil perfil) { this.perfil = perfil; }

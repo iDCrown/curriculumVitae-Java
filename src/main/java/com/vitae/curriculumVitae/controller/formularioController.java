@@ -1,8 +1,7 @@
 package com.vitae.curriculumVitae.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.vitae.curriculumVitae.model.Curriculum;
 import com.vitae.curriculumVitae.model.Experiencia;
@@ -20,13 +20,15 @@ import com.vitae.curriculumVitae.model.Perfil;
 import com.vitae.curriculumVitae.repository.CurriculumRepository;
 import com.vitae.curriculumVitae.repository.PerfilRepository;
 
-import jakarta.websocket.server.PathParam;
+
+import jakarta.validation.Valid;
 
 import com.vitae.curriculumVitae.repository.ExperienciaRepository;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
+
 
 @Controller
 @RequestMapping("/api") //este annotation es para definir un prefijo comun en todos los endpoints ejemplo: localhost:8080/api/formulario
@@ -63,6 +65,10 @@ public class formularioController {
         if (curriculum == null) {
             return "redirect:/api/landingPage"; // o una página de error amigable
         }
+
+        String base64 = Base64.getEncoder().encodeToString(curriculum.getImg_perfil());
+        model.addAttribute("fileContent", base64);
+
         model.addAttribute("curriculum", curriculum);
         model.addAttribute("perfil", curriculum.getPerfil());
         model.addAttribute("experiencias", curriculum.getExperiencias());
@@ -73,7 +79,8 @@ public class formularioController {
 
     @GetMapping("/formulario")
     public String mostrarFormulario(Model model) {
-        Curriculum curriculum = new Curriculum();
+
+    Curriculum curriculum = new Curriculum();
     
     // INICIALIZAR PERFIL
     Perfil perfil = new Perfil();
@@ -94,7 +101,7 @@ public class formularioController {
     }
     
     @PostMapping("/create-cv")
-    public String creatCV(@ModelAttribute Curriculum curriculum, BindingResult bindingResult, Model model){
+    public String creatCV(@RequestParam("file") MultipartFile file,  @Valid @ModelAttribute Curriculum curriculum, BindingResult bindingResult, Model model ) throws Exception {
         // creamos un objeto de tipo Curriculum para guardar los datos cuardados y poder obtener el id
         Curriculum saved = null;
         if (bindingResult.hasErrors()) {
@@ -104,6 +111,11 @@ public class formularioController {
         return "formulario";
     }
 
+        // Manejar la imagen de perfil
+        if(!file.isEmpty()){
+            curriculum.setImg_perfil(file.getBytes());
+        }
+
     try {
         // asignar parent en experiencias si es necesario
         if (curriculum.getExperiencias() != null) {
@@ -111,6 +123,7 @@ public class formularioController {
                 if (e != null) e.setCurriculum(curriculum);
             }
         }
+
         saved = curriculumRepository.save(curriculum);
     } catch (Exception ex) {
         ex.printStackTrace(); // <<-- mira el stacktrace en consola: 'Caused by:' es la clave

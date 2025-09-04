@@ -55,6 +55,7 @@
     }
     span {
         display: block;
+        overflow-wrap: anywhere;
         margin: 5px 0;
         font-size: 0.9rem;
         font-family: "Parkinsans", sans-serif;      
@@ -133,7 +134,9 @@
         <div class="row m-auto z-2">
             <div style=" padding: 3rem 15px 3rem 2.5rem; background-color: rgb(16 84 116) !important;
         color: white;" class="col-5 content-info d-flex flex-column  bg-light  ">
-                <img class=""  alt="Foto de Perfil" style="margin: 0 0 2rem 0; width:250px;height:250px;border-radius:50%;border: 9px solid #387691;">
+               <figure style="margin: 0 0 2rem 0; width:250px;height:250px;border-radius:50%;border: 9px solid #387691; display:flex;align-items:center;justify-content:center; overflow:hidden;">
+                    <img th:if="${fileContent}" th:src="'data:image/png;base64,' + ${fileContent}" alt="Foto de Perfil" style="width:100%;height:100%;object-fit:cover;">
+                </figure>
                 <span class="material-icons">phone 
                     <span class="span_datos" th:text="${curriculum.numeroTel}"></span>
                 </span>
@@ -169,7 +172,7 @@
                         <div class="mb-3">
                             <h2>HABILIDADES</h2>
                             <ul class="p-0" style="list-style-type: none;">
-                                <li th:each="habilidad : ${#strings.arraySplit(perfil.habilidades != null ? perfil.habilidades :'', ',')}" th:text="${habilidad.trim()}">
+                                <li th:each="habilidad : ${#strings.arraySplit(perfil.habilidades != null ? perfil.habilidades :'', ',')}" th:text="${#strings.capitalize(habilidad.trim())}">
                                     Habilidad 1
                                 </li>
                             </ul>

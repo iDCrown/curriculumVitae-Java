@@ -47,7 +47,7 @@
                 <h2 class="mb-0 text-center">Crea Tu Curriculum Vitae Completo</h2>
             </div>
             <!-- formulario -->
-             <form th:action="@{/api/create-cv}" method="post" th:object="${curriculum}" class="bg-white p-4 rounded ">
+             <form th:action="@{/api/create-cv}" method="post" th:object="${curriculum}" enctype="multipart/form-data" class="bg-white p-4 rounded ">
 
                 <!-- ACORDION PRINCIPAL -->
                  <div class="accordion mb-3" id="curriculumAccordion">
@@ -62,33 +62,45 @@
                         </h2>
                         <div id="datosPersonales" class="accordion-collapse collapse show">
                             <div class="accordion-body">
-
                                 <div class="row mb-3">
                                     <div class="col-6">
                                         <label class="form-label">Nombre *</label>
-                                        <input type="text" th:field="*{nombre}" class="form-control" required>
+                                        <input th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{nombre}"  >
+                                         <span class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
                                     </div>
                     
                                     <div class="col-6">
                                         <label class="form-label">Apellido *</label>
-                                        <input type="text" th:field="*{apellido}" class="form-control" required>
+                                        <input th:classappend="${#fields.hasErrors('apellido')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{apellido}"  >
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></span>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-6">
                                         <label class="form-label">Titulo *</label>
-                                        <input type="text" th:field="*{titulo}" class="form-control" placeholder="Ej.Ingeniero de Software" required>
+                                        <input th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{titulo}"  placeholder="Ej.Ingeniero de Software" >
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></span>
+
                                     </div>
                     
                                     <div class="col-6">
                                         <label class="form-label">Email *</label>
-                                        <input type="email" th:field="*{email}" class="form-control" placeholder="Ej.CorreoReal@gmail.com" required>
+                                        <input th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                            class="form-control" type="email" th:field="*{email}" placeholder="Ej.CorreoReal@gmail.com" required>
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-4">
                                         <label class="form-label">Telefono *</label>
-                                        <input type="text" th:field="*{numeroTel}" class="form-control" placeholder="+57 300 123 4567" required>
+                                        <input th:classappend="${#fields.hasErrors('numeroTel')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{numeroTel}" placeholder="+57 300 123 4567" required>
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('numeroTel')}" th:errors="*{numeroTel}"></span>
+
                                     </div>
 
                                     <div class="col-4">
@@ -97,12 +109,19 @@
                                             <option value="">Seleccionar país</option>
                                             <option th:each="pais : ${paises}" th:value="${pais}" th:text="${pais}"></option>
                                         </select>
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('pais')}" th:errors="*{pais}"></span>
                                     </div>
 
                                     <div class="col-4">
                                         <label class="form-label">LinkedIn *</label>
-                                        <input type="text" th:field="*{linkedin}" class="form-control" placeholder="https://linkedin.com/in/tu-perfil" required>
+                                        <input th:classappend="${#fields.hasErrors('linkedin')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{linkedin}"  placeholder="https://linkedin.com/in/tu-perfil" required>
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('linkedin')}" th:errors="*{linkedin}"></span>
                                     </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Imagen de Perfil *</label>
+                                    <input class="form-control"  type="file" name="file"  required>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +132,6 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" >
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#perfilProfesional" aria-expanded="false">
-                            <i class="bi bi-person-badge me-2"></i>
                         <strong>2.Perfil Profesional</strong>
                         </button>
                         </h2>
@@ -123,13 +141,17 @@
                                 <div class="row mb-2">
                                     <div class="mb-2">
                                         <label class="form-label">Sobre mí *</label>
-                                        <textarea th:field="*{perfil.sobreMi}" class="form-control" placeholder="Describe brevemente tu experiencia, objetivos profesionales y lo que te distingue..." rows="4" required></textarea>
+                                        <textarea th:classappend="${#fields.hasErrors('perfil.sobreMi')} ? 'is-invalid' : ''"
+                                                class="form-control" th:field="*{perfil.sobreMi}" placeholder="Describe brevemente tu experiencia, objetivos profesionales y lo que te distingue..." rows="4" required></textarea>
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('perfil.sobreMi')}" th:errors="*{perfil.sobreMi}"></span>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-8">
                                         <label class="form-label">Habilidades Técnicas *</label>
-                                        <input type="text" th:field="*{perfil.habilidades}" class="form-control" placeholder="Java, Spring Boot, MySQL, HTML, CSS, JavaScript..." required>
+                                        <input th:classappend="${#fields.hasErrors('perfil.habilidades')} ? 'is-invalid' : ''"
+                                            type="text" class="form-control" th:field="*{perfil.habilidades}" placeholder="Java, Spring Boot, MySQL, HTML, CSS, JavaScript..." required>
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('perfil.habilidades')}" th:errors="*{perfil.habilidades}"></span>
                                     </div>
                     
                                     <div class="col-md-4">
@@ -138,6 +160,7 @@
                                             <option value="">Seleccionar Idioma</option>
                                             <option th:each="idioma : ${idiomas}" th:value="${idioma}" th:text="${idioma}"></option>
                                         </select>
+                                        <span class="invalid-feedback" th:if="${#fields.hasErrors('perfil.idioma')}" th:errors="*{perfil.idioma}"></span>
                                     </div>
                                 </div>
 
@@ -146,12 +169,16 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label">Nombre de la Referencia *</label>
-                                            <input type="text" th:field="*{perfil.nombreRef}" class="form-control" placeholder="Ej.Mario Calderón" required>
+                                            <input th:classappend="${#fields.hasErrors('perfil.nombreRef')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{perfil.nombreRef}" placeholder="Ej.Mario Calderón" required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('perfil.nombreRef')}" th:errors="*{perfil.nombreRef}"></span>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label">Telefono de la Referencia *</label>
-                                            <input type="text" th:field="*{perfil.numeroRef}" class="form-control" placeholder="+57 301 234 5678" required>
+                                            <input th:classappend="${#fields.hasErrors('perfil.numeroRef')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{perfil.numeroRef}"  placeholder="+57 301 234 5678" required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('perfil.numeroRef')}" th:errors="*{perfil.numeroRef}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +191,6 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" >
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#experienciaLaboral"  aria-expanded="false">
-                            <i class="bi bi-person-badge me-2"></i>
                         <strong>3.Experiencia Laboral</strong>
                         <span class="badge bg-secondary ms-2">Máx. 3 empleos</span>
                         </button>
@@ -183,24 +209,31 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label">Nombre de la Empresa *</label>
-                                            <input type="text" th:field="*{experiencias[0].nombreEmpresa}" class="form-control" placeholder="Ej. Globant" required>
+                                            <input th:classappend="${#fields.hasErrors('experiencias[0].nombreEmpresa')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{experiencias[0].nombreEmpresa}" placeholder="Ej. Globant" required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[0].nombreEmpresa')}" th:errors="*{experiencias[0].nombreEmpresa}"></span>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label">Cargo/Posición *</label>
-                                            <input type="text" th:field="*{experiencias[0].nombreCargo}" class="form-control" placeholder="Ej. Desarrollador Full Stack" required>
+                                            <input th:classappend="${#fields.hasErrors('experiencias[0].nombreCargo')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{experiencias[0].nombreCargo}" placeholder="Ej. Desarrollador Full Stack" required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[0].nombreCargo')}" th:errors="*{experiencias[0].nombreCargo}"></span>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
                                             <label class="form-label">Fecha de Inicio *</label>
-                                            <input type="date" th:field="*{experiencias[0].fechaInicio}" class="form-control" required>
+                                            <input th:classappend="${#fields.hasErrors('experiencias[0].fechaInicio')} ? 'is-invalid' : ''"
+                                            class="form-control" type="date" th:field="*{experiencias[0].fechaInicio}"required>
                                         </div>
                         
                                         <div class="col-md-8">
                                             <label class="form-label">Descripción de Responsabilidades *</label>
-                                            <textarea th:field="*{experiencias[0].descripcion}" class="form-control" placeholder="Describe tus principales logros y responsabilidades..." rows="2" required></textarea>
+                                            <textarea th:classappend="${#fields.hasErrors('experiencias[0].descripcion')} ? 'is-invalid' : ''"
+                                                class="form-control" th:field="*{experiencias[0].descripcion}" placeholder="Describe tus principales logros y responsabilidades..." rows="2" required></textarea>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[0].descripcion')}" th:errors="*{experiencias[0].descripcion}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -216,24 +249,31 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label">Nombre de la Empresa </label>
-                                            <input type="text" th:field="*{experiencias[1].nombreEmpresa}" class="form-control">
+                                            <input th:classappend="${#fields.hasErrors('experiencias[1].nombreEmpresa')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{experiencias[1].nombreEmpresa}" >
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[1].nombreEmpresa')}" th:errors="*{experiencias[1].nombreEmpresa}"></span>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label">Cargo/Posición </label>
-                                            <input type="text" th:field="*{experiencias[1].nombreCargo}" class="form-control">
+                                            <input th:classappend="${#fields.hasErrors('experiencias[1].nombreCargo')} ? 'is-invalid' : ''"
+                                            class="form-control" type="text" th:field="*{experiencias[1].nombreCargo}" >
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[1].nombreCargo')}" th:errors="*{experiencias[1].nombreCargo}"></span>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
                                             <label class="form-label">Fecha de Inicio </label>
-                                            <input type="date" th:field="*{experiencias[1].fechaInicio}" class="form-control">
+                                            <input th:classappend="${#fields.hasErrors('experiencias[1].fechaInicio')} ? 'is-invalid' : ''"
+                                            type="date" th:field="*{experiencias[1].fechaInicio}" class="form-control">
                                         </div>
                         
                                         <div class="col-md-8">
                                             <label class="form-label">Descripción de Responsabilidades </label>
-                                            <textarea th:field="*{experiencias[1].descripcion}" class="form-control"  rows="2"></textarea>
+                                            <textarea th:classappend="${#fields.hasErrors('experiencias[1].descripcion')} ? 'is-invalid' : ''"
+                                                th:field="*{experiencias[1].descripcion}" class="form-control"  placeholder="Describe tus principales logros y responsabilidades..." rows="2"></textarea>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[1].descripcion')}" th:errors="*{experiencias[1].descripcion}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -249,24 +289,28 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label">Nombre de la Empresa *</label>
-                                            <input type="text" th:field="*{experiencias[2].nombreEmpresa}" class="form-control" required>
+                                            <input  th:classappend="${#fields.hasErrors('experiencias[2].nombreEmpresa')} ? 'is-invalid' : ''" type="text" th:field="*{experiencias[2].nombreEmpresa}" required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[2].nombreEmpresa')}" th:errors="*{experiencias[2].nombreEmpresa}"></span>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label">Cargo/Posición *</label>
-                                            <input type="text" th:field="*{experiencias[2].nombreCargo}" class="form-control"  required>
+                                            <input th:classappend="${#fields.hasErrors('experiencias[2].nombreCargo')} ? 'is-invalid' : ''" type="text" th:field="*{experiencias[2].nombreCargo}"required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[2].nombreCargo')}" th:errors="*{experiencias[2].nombreCargo}"></span>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-4">
                                             <label class="form-label">Fecha de Inicio *</label>
-                                            <input type="date" th:field="*{experiencias[2].fechaInicio}" class="form-control" required>
+                                            <input  type="date" th:field="*{experiencias[2].fechaInicio}" class="form-control" required>
                                         </div>
                         
                                         <div class="col-md-8">
                                             <label class="form-label">Descripción de Responsabilidades *</label>
-                                            <textarea th:field="*{experiencias[2].descripcion}" class="form-control"  rows="2" required></textarea>
+                                            <textarea th:classappend="${#fields.hasErrors('experiencias[2].descripcion')} ? 'is-invalid' : ''"
+                                                class="form-control" th:field="*{experiencias[2].descripcion}"   placeholder="Describe tus principales logros y responsabilidades..." rows="2" required></textarea>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[2].descripcion')}" th:errors="*{experiencias[2].descripcion}"></span>
                                         </div>
                                     </div>
                                 </div>
