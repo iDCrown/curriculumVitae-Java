@@ -65,14 +65,14 @@
                                 <div class="row mb-3">
                                     <div class="col-6">
                                         <label class="form-label">Nombre *</label>
-                                        <input th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''"
+                                        <input placeholder="Ej.Sofia Daniela" th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''"
                                             class="form-control" type="text" th:field="*{nombre}"  >
                                          <span class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
                                     </div>
                     
                                     <div class="col-6">
                                         <label class="form-label">Apellido *</label>
-                                        <input th:classappend="${#fields.hasErrors('apellido')} ? 'is-invalid' : ''"
+                                        <input placeholder="Ej.Clavijo Granados" th:classappend="${#fields.hasErrors('apellido')} ? 'is-invalid' : ''"
                                             class="form-control" type="text" th:field="*{apellido}"  >
                                         <span class="invalid-feedback" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></span>
                                     </div>
@@ -80,7 +80,7 @@
                                 <div class="row mb-3">
                                     <div class="col-6">
                                         <label class="form-label">Titulo *</label>
-                                        <input th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''"
+                                        <input   th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''"
                                             class="form-control" type="text" th:field="*{titulo}"  placeholder="Ej.Ingeniero de Software" >
                                         <span class="invalid-feedback" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></span>
 
@@ -105,7 +105,7 @@
 
                                     <div class="col-4">
                                         <label class="form-label">País *</label>
-                                        <select th:field="*{pais}" class="form-select">
+                                        <select th:field="*{pais}" class="form-select" required>
                                             <option value="">Seleccionar país</option>
                                             <option th:each="pais : ${paises}" th:value="${pais}" th:text="${pais}"></option>
                                         </select>
@@ -156,7 +156,7 @@
                     
                                     <div class="col-md-4">
                                         <label class="form-label">Idiomas *</label>
-                                        <select th:field="*{perfil.idioma}" class="form-select">
+                                        <select th:field="*{perfil.idioma}" class="form-select" required>
                                             <option value="">Seleccionar Idioma</option>
                                             <option th:each="idioma : ${idiomas}" th:value="${idioma}" th:text="${idioma}"></option>
                                         </select>
@@ -242,7 +242,7 @@
                                 <div class="experience-section">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h6 class="fw-bold text-primary mb-0">Experiencia #2</h6>
-                                            <small class="text-muted">Opcional</small>
+                                            <small class="text-muted">Otro</small>
                                         </div>
                                     
 
@@ -250,14 +250,14 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Nombre de la Empresa </label>
                                             <input th:classappend="${#fields.hasErrors('experiencias[1].nombreEmpresa')} ? 'is-invalid' : ''"
-                                            class="form-control" type="text" th:field="*{experiencias[1].nombreEmpresa}" >
+                                            class="form-control" type="text" th:field="*{experiencias[1].nombreEmpresa}"  placeholder="Ej. Pragma" >
                                             <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[1].nombreEmpresa')}" th:errors="*{experiencias[1].nombreEmpresa}"></span>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label">Cargo/Posición </label>
                                             <input th:classappend="${#fields.hasErrors('experiencias[1].nombreCargo')} ? 'is-invalid' : ''"
-                                            class="form-control" type="text" th:field="*{experiencias[1].nombreCargo}" >
+                                            class="form-control" type="text" th:field="*{experiencias[1].nombreCargo}"  placeholder="Ej. Desarrollador Full Stack">
                                             <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[1].nombreCargo')}" th:errors="*{experiencias[1].nombreCargo}"></span>
                                         </div>
                                     </div>
@@ -280,7 +280,7 @@
 
 
                                 <!-- Tercera Experiencia -->
-                                <div id="experience3" class="experience-section d-none">
+                                <div id="experience3" class="experience-section">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h6 class="fw-bold text-primary mb-0">Experiencia #3</h6>
                                         <button type="button" class="btn-close" onclick="toggleExperience(3)"></button>
@@ -289,13 +289,13 @@
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label">Nombre de la Empresa *</label>
-                                            <input  th:classappend="${#fields.hasErrors('experiencias[2].nombreEmpresa')} ? 'is-invalid' : ''" type="text" th:field="*{experiencias[2].nombreEmpresa}" required>
+                                            <input  class="form-control" placeholder="Ej. Goya Incol"  th:classappend="${#fields.hasErrors('experiencias[2].nombreEmpresa')} ? 'is-invalid' : ''" type="text" th:field="*{experiencias[2].nombreEmpresa}" required>
                                             <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[2].nombreEmpresa')}" th:errors="*{experiencias[2].nombreEmpresa}"></span>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label">Cargo/Posición *</label>
-                                            <input th:classappend="${#fields.hasErrors('experiencias[2].nombreCargo')} ? 'is-invalid' : ''" type="text" th:field="*{experiencias[2].nombreCargo}"required>
+                                            <input  class="form-control" placeholder="Ej. Consultor web" th:classappend="${#fields.hasErrors('experiencias[2].nombreCargo')} ? 'is-invalid' : ''" type="text" th:field="*{experiencias[2].nombreCargo}"required>
                                             <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[2].nombreCargo')}" th:errors="*{experiencias[2].nombreCargo}"></span>
                                         </div>
                                     </div>
@@ -316,7 +316,8 @@
                                 </div>
                                 
                                 <div class="text-center">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleExperience(3)">
+                                        <button type="button" id="toggleBtn" class="btn btn-outline-primary btn-sm" onclick="toggleExperience(3)">
+                                           
                                             + Agregar Experiencia
                                         </button>
                                 </div>
@@ -339,21 +340,50 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Al cargar la página, deshabilita los campos que estén ocultos
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.experience-section').forEach(section => {
-      setDisabledForSection(section, section.classList.contains('d-none'));
-    });
-  });
+
 
   // Función para toggle: muestra/oculta y habilita/deshabilita controles internos
-  function toggleExperience(num) {
-    const element = document.getElementById(`experience${num}`);
-    if (!element) return;
-    element.classList.toggle('d-none');
-    const hidden = element.classList.contains('d-none');
-    setDisabledForSection(element, hidden);
-  }
+  function setDisabledForSection(section, disabled) {
+  section.querySelectorAll('input, textarea, select').forEach(input => {
+    input.disabled = disabled;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.experience-section').forEach(section => {
+    setDisabledForSection(section, section.classList.contains('d-none'));
+  });
+});
+
+function toggleExperience(num) {
+  const section = document.getElementById(`experience${num}`);
+  const isHidden = section.classList.toggle("d-none");
+  setDisabledForSection(section, isHidden);
+
+  const btn = document.getElementById("toggleBtn");
+  btn.innerText = isHidden ? "+ Agregar Experiencia" : "- Quitar Experiencia";
+}
+
+//   function toggleExperience(num) {
+//     const element = document.getElementById(`experience${num}`);
+//     let btn = document.getElementById("toggleBtn");
+
+//     if (!element) return;
+//     if(element.classList.contains('d-none')){
+//          element.querySelectorAll('input, textarea').forEach(input => input.value = '');
+//     }
+//     element.classList.toggle('d-none');
+//     const hidden = element.classList.contains('d-none');
+//     setDisabledForSection(element, hidden);
+
+//     // Actualiza el texto del botón
+  
+//     if (btn.innerText.startsWith("+")) {
+//         btn.innerText = "- Quitar Experiencia";
+//     } else {
+//         btn.innerText = "+ Agregar Experiencia";
+//     }
+//   }
 
   // Deshabilita/habilita todos los controles dentro de 'section'
   function setDisabledForSection(section, disabled) {

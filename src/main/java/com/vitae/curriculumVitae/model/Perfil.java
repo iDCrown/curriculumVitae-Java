@@ -17,12 +17,12 @@ public class Perfil {
     private Long id;
     
     @NotBlank(message = "La descripción es obligatoria")
-    @Pattern(regexp="^[\\p{L}\\s,.!?]{1,500}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 1 y 200 caracteres")
+    @Pattern(regexp="^[\\p{L}\\s,.!?()\"':;-]{1,1000}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 1 y 1000 caracteres")
     @Column(name = "sobre_mi", columnDefinition = "TEXT")
     private String sobreMi;
     
     @NotBlank(message = "La descripción es obligatoria")
-    @Pattern(regexp="^[\\p{L}\\s,.!?]{1,500}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 1 y 100 caracteres")
+    @Pattern(regexp="^[\\p{L}\\s,.!?()\"':;-]{1,1000}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 1 y 100 caracteres")
     @Column(columnDefinition = "TEXT")
     private String habilidades;
     
@@ -69,7 +69,14 @@ public class Perfil {
     public void setHabilidades(String habilidades) {  this.habilidades = habilidades;}
     
     public String getIdioma() { return idioma; }
-    public void setIdioma(String idioma) { this.idioma = idioma; }
+    public void setIdioma(String idioma) { 
+         if (idioma != null && !idioma.isBlank()) {
+        // Convierte la primera letra a mayúscula y el resto a minúscula
+        this.idioma = idioma.substring(0, 1).toUpperCase() + idioma.substring(1).toLowerCase();
+    } else {
+        this.idioma = idioma;
+    }
+    }
     
     public String getNombreRef() { return nombreRef; }
     public void setNombreRef(String nombreRef) { 

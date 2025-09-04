@@ -37,7 +37,7 @@ public class Curriculum {
     
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El email debe ser válido, contener '@' y un dominio")
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
     
     @NotBlank(message = "El país es obligatorio")

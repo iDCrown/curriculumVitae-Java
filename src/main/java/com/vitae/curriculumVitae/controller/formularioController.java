@@ -76,6 +76,18 @@ public class formularioController {
         return "plantillaCreativa"; // busca plantillaCreativa.html en /templates
     }
 
+    @GetMapping("/editar/{id}")
+    public String editarCv(@PathVariable Long id, Model model) {
+        Curriculum curriculum = curriculumRepository.findById(id).orElse(null);
+        if (curriculum == null) {
+            return "redirect:/api/landingPage"; // o una página de error amigable
+        }
+        model.addAttribute("curriculum", curriculum);
+        model.addAttribute("paises", PAISES);
+        model.addAttribute("idiomas", IDIOMAS);
+        return "formulario"; // reutilizamos el formulario para editar
+    }
+
 
     @GetMapping("/formulario")
     public String mostrarFormulario(Model model) {
