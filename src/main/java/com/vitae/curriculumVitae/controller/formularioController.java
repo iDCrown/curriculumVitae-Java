@@ -136,5 +136,11 @@ public class formularioController {
     return "redirect:/api/plantillaCreativa/" + saved.getId();
 }
 
+@GetMapping("/lista")
+public String mostrarLista(Model model) {
+    List<Curriculum> curriculums = curriculumRepository.findAll();
+    model.addAttribute("curriculums", curriculums);
+    return "lista"; 
+}
 
 }
