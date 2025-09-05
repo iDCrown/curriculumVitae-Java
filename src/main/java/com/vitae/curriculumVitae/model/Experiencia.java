@@ -18,12 +18,12 @@ public class Experiencia {
     private Long id;
     
     @NotBlank(message = "El nombre es obligatorio")
-    @Pattern(regexp="^[\\p{L}\\s]{1,100}$", message="El nombre solo puede contener letras y espacios, y tener entre 1 y 50 caracteres")
+    @Pattern(regexp="^(?=.{4,100}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El nombre solo puede contener letras y espacios, y tener entre 4 y 100 caracteres")
     @Column(name = "nombre_empresa", nullable = false)
     private String nombreEmpresa;
     
     @NotBlank(message = "El cargo es obligatorio")
-    @Pattern(regexp="^[\\p{L}\\s/,.]{1,100}$", message="El nombre del cargo solo puede contener letras y espacios, y tener entre 1 y 50 caracteres")
+    @Pattern(regexp="^(?=.{4,60}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El nombre del cargo solo puede contener letras y espacios, y tener entre 4 y 60 caracteres")
     @Column(name = "nombre_cargo", nullable = false)
     private String nombreCargo;
 
@@ -32,7 +32,7 @@ public class Experiencia {
     private LocalDate fechaInicio;
     
     @NotBlank(message = "La descripción es obligatoria")
-    @Pattern(regexp="^[\\p{L}\\s,.!?()\"':;-]{1,1000}$", message="La descripción solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 1 y 1000 caracteres")
+    @Pattern(regexp="^[\\p{L}\\p{M}\\p{P}\\p{Zs}\\n]{10,1000}$", message="La descripción solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 10 y 1000 caracteres")
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 

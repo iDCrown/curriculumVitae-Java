@@ -98,7 +98,7 @@
                                     <div class="col-4">
                                         <label class="form-label">Telefono *</label>
                                         <input th:classappend="${#fields.hasErrors('numeroTel')} ? 'is-invalid' : ''"
-                                            class="form-control" type="text" th:field="*{numeroTel}" placeholder="+57 300 123 4567" required>
+                                            class="form-control" type="text" th:field="*{numeroTel}" placeholder=" 300 123 4567" required>
                                         <span class="invalid-feedback" th:if="${#fields.hasErrors('numeroTel')}" th:errors="*{numeroTel}"></span>
 
                                     </div>
@@ -177,7 +177,7 @@
                                         <div class="col-md-6">
                                             <label class="form-label">Telefono de la Referencia *</label>
                                             <input th:classappend="${#fields.hasErrors('perfil.numeroRef')} ? 'is-invalid' : ''"
-                                            class="form-control" type="text" th:field="*{perfil.numeroRef}"  placeholder="+57 301 234 5678" required>
+                                            class="form-control" type="text" th:field="*{perfil.numeroRef}"  placeholder="301 234 5678" required>
                                             <span class="invalid-feedback" th:if="${#fields.hasErrors('perfil.numeroRef')}" th:errors="*{perfil.numeroRef}"></span>
                                         </div>
                                     </div>

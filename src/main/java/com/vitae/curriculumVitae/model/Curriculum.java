@@ -16,17 +16,17 @@ public class Curriculum {
     private Long id;
     
     @NotBlank(message = "El nombre es obligatorio")
-    @Pattern(regexp="^[\\p{L}\\s]{1,20}$", message="El nombre solo puede contener letras y espacios, y tener entre 1 y 20 caracteres")
+    @Pattern(regexp="^(?=.{4,30}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El nombre solo puede contener letras y espacios, y tener entre 4 y 30 caracteres")
     @Column(nullable = false)
     private String nombre;
 
     @NotBlank(message = "El apellido es obligatorio")
-    @Pattern(regexp="^[\\p{L}\\s]{1,20}$", message="El apellidp solo puede contener letras y espacios, y tener entre 1 y 20 caracteres")
+    @Pattern(regexp="^(?=.{4,30}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El apellido solo puede contener letras y espacios, y tener entre 4 y 30 caracteres")
     @Column(nullable = false)
     private String apellido;
     
     @NotBlank(message = "El nombre es obligatorio")
-    @Pattern(regexp="^[\\p{L}\\s]{1,50}$", message="El titulo solo puede contener letras y espacios, y tener entre 1 y 50 caracteres")
+    @Pattern(regexp="^(?=.{4,60}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El titulo solo puede contener letras y espacios, y tener entre 4 y 50 caracteres")
     @Column(nullable = false)
     private String titulo;
     
@@ -37,6 +37,10 @@ public class Curriculum {
     
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El email debe ser válido, contener '@' y un dominio")
+    @Pattern(
+    regexp = "^[A-Za-z0-9._%+-]{5,}@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+    message = "El email debe tener al menos 5 caracteres antes del @ y un dominio válido"
+    )
     @Column(nullable = false)
     private String email;
     
