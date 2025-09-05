@@ -17,12 +17,12 @@ public class Perfil {
     private Long id;
     
     @NotBlank(message = "La descripción es obligatoria")
-    @Pattern(regexp="^[\\p{L}\\s,.!?]{1,500}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 1 y 200 caracteres")
+    @Pattern(regexp= "^[\\p{L}\\p{M}\\p{P}\\p{Zs}\\n]{10,1000}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 10 y 1000 caracteres")
     @Column(name = "sobre_mi", columnDefinition = "TEXT")
     private String sobreMi;
     
     @NotBlank(message = "La descripción es obligatoria")
-    @Pattern(regexp="^[\\p{L}\\s,.!?]{1,500}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 1 y 100 caracteres")
+    @Pattern(regexp="^[\\p{L}\\s,.!?()\"':;-]{4,1000}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 4 y 1000 caracteres")
     @Column(columnDefinition = "TEXT")
     private String habilidades;
     
@@ -31,7 +31,7 @@ public class Perfil {
     private String idioma;
     
     @NotBlank(message = "El nombre es obligatoria")
-    @Pattern(regexp="^[\\p{L}\\s]{1,500}$", message="El nombre solo puede contener letras y espacios, y tener entre 1 y 50 caracteres")
+    @Pattern(regexp="^(?=.{4,100}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El nombre solo puede contener letras y espacios, y tener entre 4 y 100 caracteres")
     @Column(name = "nombre_ref")
     private String nombreRef;
     
@@ -69,7 +69,14 @@ public class Perfil {
     public void setHabilidades(String habilidades) {  this.habilidades = habilidades;}
     
     public String getIdioma() { return idioma; }
-    public void setIdioma(String idioma) { this.idioma = idioma; }
+    public void setIdioma(String idioma) { 
+         if (idioma != null && !idioma.isBlank()) {
+        // Convierte la primera letra a mayúscula y el resto a minúscula
+        this.idioma = idioma.substring(0, 1).toUpperCase() + idioma.substring(1).toLowerCase();
+    } else {
+        this.idioma = idioma;
+    }
+    }
     
     public String getNombreRef() { return nombreRef; }
     public void setNombreRef(String nombreRef) { 
