@@ -86,6 +86,8 @@ public class formularioController {
         model.addAttribute("paises", PAISES);
         model.addAttribute("idiomas", IDIOMAS);
         return "formulario"; // reutilizamos el formulario para editar
+
+        
     }
 
 
@@ -122,6 +124,34 @@ public class formularioController {
         bindingResult.getAllErrors().forEach(e -> System.out.println("Binding error: " + e));
         return "formulario";
     }
+
+    if (curriculum.getNombre().equalsIgnoreCase(curriculum.getApellido())) {
+        bindingResult.rejectValue("apellido", "error.curriculum", "El apellido no puede ser igual al nombre");
+    }
+
+
+    // Validación referencias. Tanto el nombre como el número
+
+    //Validación de nombre. valida si el nombre del aplicante es igual al de la referencia
+    if (curriculum.getPerfil() != null) {
+        String aplicante = (curriculum.getNombre() + " " + curriculum.getApellido()).trim().toLowerCase();
+        String referencia = curriculum.getPerfil().getNombreRef().trim().toLowerCase();
+
+        if (aplicante.equals(referencia)) {
+            model.addAttribute("paises", PAISES);
+            model.addAttribute("idiomas", IDIOMAS);
+            model.addAttribute("errorReferencia", "La referencia no puede ser la misma persona que aplica.");
+            return "formulario";
+        }
+    }
+
+    //Validación de número. Al igual que en el nombre, se evalua si el telefono de la referencia es igual al del aplicante. En dado caso no permite la creación del CV
+    if (curriculum.getNumeroTel() != null && curriculum.getPerfil().getNumeroRef().trim().toLowerCase() != null &&
+        curriculum.getNumeroTel().equals(curriculum.getPerfil().getNumeroRef().trim().toLowerCase())) {
+        bindingResult.rejectValue("perfil.numeroRef", "error.curriculum", "El teléfono de la referencia no puede ser el mismo del aplicante");
+    }
+
+
 
         // Manejar la imagen de perfil
         if(!file.isEmpty()){

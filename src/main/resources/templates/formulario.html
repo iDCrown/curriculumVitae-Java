@@ -57,7 +57,10 @@
                 <h2 class="mb-0 text-center">Crea Tu Curriculum Vitae Completo</h2>
             </div>
             <!-- formulario -->
-             <form th:action="@{/api/create-cv}" method="post" th:object="${curriculum}" enctype="multipart/form-data" class="bg-white p-4 rounded ">
+             <form th:action="@{/api/create-cv}" method="post" th:object="${curriculum}" enctype="multipart/form-data" class="bg-white p-4 rounded needs-validation" novalidate>
+
+
+                 <input type="hidden" th:field="*{id}" />
 
                 <!-- ACORDION PRINCIPAL -->
                  <div class="accordion mb-3" id="curriculumAccordion">
@@ -237,6 +240,7 @@
                                             <label class="form-label">Fecha de Inicio *</label>
                                             <input th:classappend="${#fields.hasErrors('experiencias[0].fechaInicio')} ? 'is-invalid' : ''"
                                             class="form-control" type="date" th:field="*{experiencias[0].fechaInicio}"required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[0].fechaInicio')}" th:errors="*{experiencias[0].fechaInicio}"></span>
                                         </div>
                         
                                         <div class="col-md-8">
@@ -277,6 +281,7 @@
                                             <label class="form-label">Fecha de Inicio </label>
                                             <input th:classappend="${#fields.hasErrors('experiencias[1].fechaInicio')} ? 'is-invalid' : ''"
                                             type="date" th:field="*{experiencias[1].fechaInicio}" class="form-control">
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[1].fechaInicio')}" th:errors="*{experiencias[1].fechaInicio}"></span>
                                         </div>
                         
                                         <div class="col-md-8">
@@ -314,6 +319,7 @@
                                         <div class="col-md-4">
                                             <label class="form-label">Fecha de Inicio *</label>
                                             <input  type="date" th:field="*{experiencias[2].fechaInicio}" class="form-control" required>
+                                            <span class="invalid-feedback" th:if="${#fields.hasErrors('experiencias[2].fechaInicio')}" th:errors="*{experiencias[2].fechaInicio}"></span>
                                         </div>
                         
                                         <div class="col-md-8">
@@ -352,87 +358,137 @@
     <script>
 
 
-  // Función para toggle: muestra/oculta y habilita/deshabilita controles internos
-  function setDisabledForSection(section, disabled) {
-  section.querySelectorAll('input, textarea, select').forEach(input => {
-    input.disabled = disabled;
+/**
+ * setDisabledForSection(section, disabled)
+ * - activa/desactiva controles dentro de 'section'
+ * - guarda/restaura el atributo required en data-required para no perder validaciones
+ */
+function setDisabledForSection(section, disabled) {
+  if (!section) return;
+  const controls = section.querySelectorAll('input, textarea, select, button');
+  controls.forEach(ctrl => {
+    // No deshabilitar botones tipo control que sean internos si no corresponde
+    if (ctrl.type === 'button' || ctrl.type === 'submit') {
+      // Pero sí respetar el estado disabled si el control es parte del formulario
+      if (disabled) ctrl.disabled = true;
+      else {
+        // restaurar solo si dataset.required indica que era requerido
+        ctrl.disabled = false;
+      }
+      return;
+    }
+
+    // Guarda/restaura atributo required
+    if (disabled) {
+      if (ctrl.required) ctrl.dataset.required = 'true';
+      ctrl.required = false;
+    } else {
+      if (ctrl.dataset && ctrl.dataset.required === 'true') {
+        ctrl.required = true;
+        delete ctrl.dataset.required;
+      }
+    }
+
+    ctrl.disabled = !!disabled;
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.experience-section').forEach(section => {
-    setDisabledForSection(section, section.classList.contains('d-none'));
-  });
-});
-
+/**
+ * toggleExperience(num)
+ * - muestra/oculta la sección de experiencia N (id="experienceN")
+ * - actualiza el texto del botón toggleBtn (el botón que controla la experiencia 3)
+ */
 function toggleExperience(num) {
   const section = document.getElementById(`experience${num}`);
+  if (!section) return;
   const isHidden = section.classList.toggle("d-none");
   setDisabledForSection(section, isHidden);
 
   const btn = document.getElementById("toggleBtn");
-  btn.innerText = isHidden ? "+ Agregar Experiencia" : "- Quitar Experiencia";
+  if (btn) {
+    // Si la sección está oculta, el texto debería invitar a agregar; si no, a quitar
+    btn.innerText = isHidden ? "+ Agregar Experiencia" : "- Quitar Experiencia";
+  }
 }
 
-//   function toggleExperience(num) {
-//     const element = document.getElementById(`experience${num}`);
-//     let btn = document.getElementById("toggleBtn");
+/**
+ * Inicialización en DOMContentLoaded:
+ * - fija min / max en date inputs
+ * - aplica disabled a secciones ya ocultas
+ * - abre acordeón / habilita sección si existe .is-invalid (errores server-side)
+ * - ajusta texto inicial del toggleBtn
+ * - inicializa validación Bootstrap (se deja el evento 'load' para compatibilidad)
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) set min y max en todos los date inputs
+  const today = new Date().toISOString().split('T')[0];
+  const minDate = '1970-01-01';
+  document.querySelectorAll('input[type="date"]').forEach(i => {
+    try { i.max = maxDate; } catch (e) {}
+    try { i.min = minDate; } catch (e) {}
+  });
 
-//     if (!element) return;
-//     if(element.classList.contains('d-none')){
-//          element.querySelectorAll('input, textarea').forEach(input => input.value = '');
-//     }
-//     element.classList.toggle('d-none');
-//     const hidden = element.classList.contains('d-none');
-//     setDisabledForSection(element, hidden);
+  // 2) aplicar disabled a las experience-section que estén ocultas (d-none)
+  document.querySelectorAll('.experience-section').forEach(section => {
+    const hidden = section.classList.contains('d-none');
+    setDisabledForSection(section, hidden);
+  });
 
-//     // Actualiza el texto del botón
-  
-//     if (btn.innerText.startsWith("+")) {
-//         btn.innerText = "- Quitar Experiencia";
-//     } else {
-//         btn.innerText = "+ Agregar Experiencia";
-//     }
-//   }
-
-  // Deshabilita/habilita todos los controles dentro de 'section'
-  function setDisabledForSection(section, disabled) {
-    const controls = section.querySelectorAll('input, textarea, select, button');
-    controls.forEach(ctrl => {
-      // evita deshabilitar botones de control interior que no deben afectarse
-      if (ctrl.type === 'button' || ctrl.type === 'submit') return;
-
-      // Guarda/restaura estado 'required' para no perder validaciones
-      if (disabled) {
-        if (ctrl.required) ctrl.dataset.required = 'true';
-        ctrl.required = false;
-      } else {
-        if (ctrl.dataset.required === 'true') {
-          ctrl.required = true;
-          delete ctrl.dataset.required;
-        }
-      }
-
-      ctrl.disabled = disabled;
-    });
+  // 3) ajustar texto inicial del botón toggleBtn según el estado actual de experience3
+  const exp3 = document.getElementById('experience3');
+  const toggleBtn = document.getElementById('toggleBtn');
+  if (toggleBtn) {
+    if (!exp3 || exp3.classList.contains('d-none')) toggleBtn.innerText = "+ Agregar Experiencia";
+    else toggleBtn.innerText = "- Quitar Experiencia";
   }
 
-  // Validación Bootstrap (mantenerla)
-  (function() {
-    'use strict';
-    window.addEventListener('load', function() {
-      var forms = document.getElementsByClassName('needs-validation');
-      var validation = Array.prototype.filter.call(forms, function(form) {
-        form.addEventListener('submit', function(event) {
-          if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add('was-validated');
-        }, false);
-      });
-    }, false);
-  })();
+  // 4) si hay errores server-side (Thymeleaf deja la clase .is-invalid), abre la sección correspondiente y scrollea
+  const firstInvalid = document.querySelector('.is-invalid');
+  if (firstInvalid) {
+    // 4.a) si está dentro de un collapse de un accordion -> abrir ese collapse
+    const collapseEl = firstInvalid.closest('.accordion-collapse');
+    if (collapseEl) {
+      // bootstrap Collapse API (v5)
+      const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl);
+      bsCollapse.show();
+    }
+
+    // 4.b) si está dentro de una experience-section oculta por toggle (d-none) -> mostrarla y re-habilitar inputs
+    const experienceSection = firstInvalid.closest('.experience-section');
+    if (experienceSection && experienceSection.classList.contains('d-none')) {
+      experienceSection.classList.remove('d-none');
+      setDisabledForSection(experienceSection, false);
+
+      // actualizar texto del toggleBtn si corresponde
+      if (toggleBtn) toggleBtn.innerText = "- Quitar Experiencia";
+    }
+
+    // 4.c) scrollear al campo con error
+    firstInvalid.scrollIntoView({behavior: 'smooth', block: 'center'});
+    // opcional: poner focus en el campo invalid
+    try { firstInvalid.focus({preventScroll:true}); } catch(e) {}
+  }
+}); // fin DOMContentLoaded
+
+/**
+ * Bootstrap validation: mantenemos tu flujo original (se ejecuta en load)
+ * No lo modificamos, solo lo dejamos tal cual para compatibilidad con tu HTML.
+ */
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
     </script>
 </body>
 </html>

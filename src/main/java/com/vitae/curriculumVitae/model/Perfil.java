@@ -17,12 +17,13 @@ public class Perfil {
     private Long id;
     
     @NotBlank(message = "La descripción es obligatoria")
-    @Pattern(regexp= "^[\\p{L}\\p{M}\\p{P}\\p{Zs}\\n]{10,1000}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 10 y 1000 caracteres")
+    @Pattern(regexp= "^[\\p{L}\\p{M}\\p{P}\\p{Zs}\\n]{10,800}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 10 y 1000 caracteres")
     @Column(name = "sobre_mi", columnDefinition = "TEXT")
     private String sobreMi;
     
-    @NotBlank(message = "La descripción es obligatoria")
-    @Pattern(regexp="^[\\p{L}\\s,.!?()\"':;-]{4,1000}$", message="Sobre Mi solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 4 y 1000 caracteres")
+    @NotBlank(message = "Las habilidades son obligatorias")
+    @Size(min = 1, max = 500, message = "Debes tener por lo menos una habilidad (1-500 caracteres).")
+    @Pattern(regexp = "^(?=.{1,500}$)(?=.*\\p{L})(?!\\d+$)[\\p{L}\\d\\s.,+#/\\-]+$", message = "Debes tener por lo menos una habilidad para el trabajo al que estas aplicando. No se permiten solo números")
     @Column(columnDefinition = "TEXT")
     private String habilidades;
     

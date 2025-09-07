@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.vitae.curriculumVitae.validations.NotBefore;
+
 @Entity
 @Table(name = "experiencias")
 public class Experiencia {
@@ -27,9 +29,20 @@ public class Experiencia {
     @Column(name = "nombre_cargo", nullable = false)
     private String nombreCargo;
 
+    @NotNull(message = "La fecha de inicio es obligatoria")
+    @Past(message = "La fecha no puede ser en el futuro")
+    @NotBefore(value = "1970-01-01", message = "La fecha de inicio no puede ser anterior a 1970-01-01")
     @Column(name = "fecha_inicio")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaInicio;
+
+
+    /* Método para validar que las experiencias no se puedan ingresar con una fecha menor a 1970-01-01 */
+    @AssertTrue(message = "La fecha de inicio no puede ser anterior a 1970-01-01")
+    public boolean isFechaInicioNoAntesDe1970() {
+        if (fechaInicio == null) return true; // @NotNull se encargará de la obligación
+        return !fechaInicio.isBefore(LocalDate.of(1970, 1, 1));
+    }
     
     @NotBlank(message = "La descripción es obligatoria")
     @Pattern(regexp="^[\\p{L}\\p{M}\\p{P}\\p{Zs}\\n]{10,1000}$", message="La descripción solo puede contener letras, espacios y signos de puntuación básicos, y tener entre 10 y 1000 caracteres")
