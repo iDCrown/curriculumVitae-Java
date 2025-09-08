@@ -32,7 +32,8 @@ public class Perfil {
     private String idioma;
     
     @NotBlank(message = "El nombre es obligatoria")
-    @Pattern(regexp="^(?=.{4,100}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El nombre solo puede contener letras y espacios, y tener entre 4 y 100 caracteres")
+    @Pattern(regexp="^(?!.*\\b(\\p{L}{1,2})\\b)(?!.*\\b(\\p{L}+)\\b\\s+\\1\\b)(?=.{4,45}$)(?!.*\\s{2,})\\p{L}+(?:[ '-]\\p{L}+)*$" 
+                , message="El nombre solo puede contener letras y espacios, y tener entre 4 y 100 caracteres")
     @Column(name = "nombre_ref")
     private String nombreRef;
     

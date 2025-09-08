@@ -20,7 +20,7 @@ public class Experiencia {
     private Long id;
     
     @NotBlank(message = "El nombre es obligatorio")
-    @Pattern(regexp="^(?=.{4,100}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El nombre solo puede contener letras y espacios, y tener entre 4 y 100 caracteres")
+    @Pattern(regexp="^(?=.{2,100}$)[A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+)*$", message="El nombre solo puede contener letras y espacios, y tener entre 4 y 100 caracteres")
     @Column(name = "nombre_empresa", nullable = false)
     private String nombreEmpresa;
     

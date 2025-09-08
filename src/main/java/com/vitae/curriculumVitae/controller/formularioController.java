@@ -2,6 +2,7 @@ package com.vitae.curriculumVitae.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ import com.vitae.curriculumVitae.model.Experiencia;
 import com.vitae.curriculumVitae.model.Perfil;
 import com.vitae.curriculumVitae.repository.CurriculumRepository;
 import com.vitae.curriculumVitae.repository.PerfilRepository;
-
+import com.vitae.curriculumVitae.validations.Phone;
 
 import jakarta.validation.Valid;
 
@@ -50,6 +51,11 @@ public class formularioController {
     
     private static final String[] IDIOMAS = {
         "Español","Inglés","Portugués","Francés","Alemán","Italiano","Mandarín","Árabe"
+    };
+
+    private static final String[] prefijos = {
+        "US", "CO", "MX", "ES", "AR", "CL", "PE", "VE", "EC", 
+        "BO", "UY", "PY", "BR", "FR", "DE", "GB", "IT", "NL", "SE"
     };
     
     //Endpopint
@@ -85,6 +91,7 @@ public class formularioController {
         model.addAttribute("curriculum", curriculum);
         model.addAttribute("paises", PAISES);
         model.addAttribute("idiomas", IDIOMAS);
+        model.addAttribute("prefijos", prefijos);
         return "formulario"; // reutilizamos el formulario para editar
 
         
@@ -111,6 +118,7 @@ public class formularioController {
     model.addAttribute("curriculum", curriculum);
     model.addAttribute("paises", PAISES);
     model.addAttribute("idiomas", IDIOMAS);
+    model.addAttribute("prefijos", prefijos);
     return "formulario";
     }
     
@@ -118,19 +126,17 @@ public class formularioController {
     public String creatCV(@RequestParam("file") MultipartFile file,  @Valid @ModelAttribute Curriculum curriculum, BindingResult bindingResult, Model model ) throws Exception {
         // creamos un objeto de tipo Curriculum para guardar los datos cuardados y poder obtener el id
         Curriculum saved = null;
-        if (bindingResult.hasErrors()) {
-        model.addAttribute("paises", PAISES);
-        model.addAttribute("idiomas", IDIOMAS);
-        bindingResult.getAllErrors().forEach(e -> System.out.println("Binding error: " + e));
-        return "formulario";
-    }
-
+       
     if (curriculum.getNombre().equalsIgnoreCase(curriculum.getApellido())) {
         bindingResult.rejectValue("apellido", "error.curriculum", "El apellido no puede ser igual al nombre");
     }
 
-
     // Validación referencias. Tanto el nombre como el número
+
+    boolean validacionTel = Phone.validatePhoneNumber(curriculum.getNumeroTel(), curriculum.getPrefijo());
+    if(!validacionTel){
+        bindingResult.rejectValue("numeroTel", "error.curriculum", "El número de teléfono no es válido para el país seleccionado");
+    } 
 
     //Validación de nombre. valida si el nombre del aplicante es igual al de la referencia
     if (curriculum.getPerfil() != null) {
@@ -140,6 +146,7 @@ public class formularioController {
         if (aplicante.equals(referencia)) {
             model.addAttribute("paises", PAISES);
             model.addAttribute("idiomas", IDIOMAS);
+            model.addAttribute("prefijos", prefijos);
             model.addAttribute("errorReferencia", "La referencia no puede ser la misma persona que aplica.");
             return "formulario";
         }
@@ -151,6 +158,17 @@ public class formularioController {
         bindingResult.rejectValue("perfil.numeroRef", "error.curriculum", "El teléfono de la referencia no puede ser el mismo del aplicante");
     }
 
+     if (bindingResult.hasErrors()) {
+        model.addAttribute("paises", PAISES);
+        model.addAttribute("idiomas", IDIOMAS);
+        model.addAttribute("prefijos", prefijos);
+        bindingResult.getAllErrors().forEach(e -> System.out.println("Binding error: " + e));
+        return "formulario";
+    }
+
+    bindingResult.getAllErrors().forEach(e -> 
+    System.out.println("Campo: " + e.getObjectName() + " - Error: " + e.getDefaultMessage())
+    );
 
 
         // Manejar la imagen de perfil
@@ -172,6 +190,7 @@ public class formularioController {
         model.addAttribute("errorMessage", "Error al guardar CV: " + ex.getMessage());
         model.addAttribute("paises", PAISES);
         model.addAttribute("idiomas", IDIOMAS);
+        model.addAttribute("prefijos", prefijos);
         return "formulario";
     }
 

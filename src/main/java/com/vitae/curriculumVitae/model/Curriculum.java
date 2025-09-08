@@ -16,12 +16,14 @@ public class Curriculum {
     private Long id;
     
     @NotBlank(message = "El nombre es obligatorio")
-    @Pattern(regexp="^(?=.{4,45}$)(?!.*\\s{2,})\\p{L}+(?:[ '-]\\p{L}+)*$", message="El nombre solo puede contener letras y espacios, y tener entre 4 y 45 caracteres")
+    @Pattern(regexp="^(?!.*\\b(\\p{L}{1,2})\\b)(?!.*\\b(\\p{L}+)\\b\\s+\\1\\b)(?=.{3,45}$)(?!.*\\s{2,})\\p{L}+(?:[ '-]\\p{L}+)*$"
+                , message="El nombre solo puede contener letras y espacios, y tener entre 4 y 45 caracteres")
     @Column(nullable = false)
     private String nombre;
 
     @NotBlank(message = "El apellido es obligatorio")
-    @Pattern(regexp="^(?=.{4,45}$)(?!.*\\s{2,})\\p{L}+(?:[ '-]\\p{L}+)*$", message="El apellido solo puede contener letras y espacios, y tener entre 4 y 45 caracteres")
+    @Pattern(regexp="^(?!.*\\b(\\p{L}{1,2})\\b)(?!.*\\b(\\p{L}+)\\b\\s+\\1\\b)(?=.{4,45}$)(?!.*\\s{2,})\\p{L}+(?:[ '-]\\p{L}+)*$" 
+                , message="El apellido solo puede contener letras y espacios, y tener entre 4 y 45 caracteres")
     @Column(nullable = false)
     private String apellido;
     
@@ -53,6 +55,8 @@ public class Curriculum {
 
     @Lob
     private byte[] img_perfil;
+
+    private String prefijo;
     
     // Relación OneToOne con Perfil
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -120,6 +124,9 @@ public class Curriculum {
     
     public String getLinkedin() { return linkedin; }
     public void setLinkedin(String linkedin) { this.linkedin = linkedin; }
+
+    public String getPrefijo() { return prefijo; }
+    public void setPrefijo(String prefijo) { this.prefijo = prefijo; }
 
     public byte[] getImg_perfil() { return img_perfil; }
     public void setImg_perfil(byte[] img_perfil) { this.img_perfil = img_perfil; }
